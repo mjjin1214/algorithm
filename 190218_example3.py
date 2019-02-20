@@ -24,13 +24,10 @@ for _ in range(length ** 2):
     selection_l.append(min)
     data[Y][X] = length ** 2 + 1
 
-print(selection_l)
-
 dx = [1, 0, -1, 0]
 dy = [0, 1, 0, -1]
 
 array_l = [[0 for _ in range(length)] for _ in range(length)]
-print(array_l)
 
 i,j, delta = 0, 0, 0
 for num in selection_l:

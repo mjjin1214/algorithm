@@ -15,4 +15,10 @@ stair(4)
 print(count)
 
 
-def hanoi()
+def hanoi(fro, spare, to):
+    count += 1
+    if fro == 1:
+        return
+    hanoi(fro-1, spare+1, to)
+    hanoi(spare+1, fro-1, to)
+    return

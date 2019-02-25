@@ -3,29 +3,23 @@ import sys
 sys.stdin = open('input.txt', 'r')
 
 
-def work(x):
-    check_vector[x] -= 1
-    if check_vector[x] > 0 or visit_vector[x] == 1:
-        return
-    visit_vector[x] = 1
-    ans.append(x)
-    for i in range(len(path_matrix[x])):
-        if path_matrix[x][i] == 1:
-            work(i)
+def winner(a, b):
+    if cards[a-1]-cards[b-1] == -1 or cards[a-1]-cards[b-1] == 2:
+        return b
+    else:
+        return a
 
 
-for t in range(10):
-    V, E = map(int, input().split())
-    E_list = list(map(int, input().split()))
-    path_matrix = [[0 for _ in range(V+1)] for _ in range(V+1)]
-    check_vector = [0 for _ in range(V+1)]
-    visit_vector = [0 for _ in range(V+1)]
-    for e in range(0, len(E_list), 2):
-        path_matrix[E_list[e]][E_list[e+1]] = 1
-        check_vector[E_list[e+1]] += 1
+def divide(first, last):
+    if last-first == 1:
+        return winner(first, last)
+    elif last-first == 0:
+        return last
+    return winner(divide(first, (first+last)//2), divide((first+last)//2+1, last))
 
-    ans = []
-    for x in range(1, len(check_vector)):
-        if check_vector[x] == 0:
-            work(x)
-    print(f"#{t+1} {' '.join(map(str, ans))}")
+
+T = int(input())
+for t in range(T):
+    N = int(input())
+    cards = list(map(int, input().split()))
+    print(f'#{t+1} {divide(1, N)}')

@@ -16,9 +16,15 @@ print(count)
 
 
 def hanoi(fro, spare, to):
-    count += 1
-    if fro == 1:
+    if fro == 0:
         return
-    hanoi(fro-1, spare+1, to)
-    hanoi(spare+1, fro-1, to)
+    global count
+    count += 1
+    hanoi(fro-1, to, spare)
+    hanoi(fro-1, spare, to)
     return
+
+
+count = 0
+hanoi(3)
+print(count)

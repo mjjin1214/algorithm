@@ -2,175 +2,50 @@ import sys
 
 sys.stdin = open('input.txt', 'r')
 
-dy = [-1, -1, 0, 1, 1, 1, 0, -1]
-dx = [0, 1, 1, 1, 0, -1, -1, -1]
+T = int(input())
+for t in range(T):
+    N, L, k = map(int, input().split())
+    ID = []
+    plus = []
+    minus = []
+    for _ in range(N):
+        p, a = map(int, input().split())
+        ID.append(a)
+        if a > 0:
+            plus.append(L-p)
+            now = len(plus-1)
+            pre = now - 1
+            while plus[pre] > plus[now]:
+                plus[pre], plus[now] = plus[now], pre[now]
+                now = pre
+                pre = now -1
 
+        else:
+            minus.append(p-0)
+            if len(minus) > 2:
+            now = len(plus - 1)
+            pre = now - 1
+            while plus[pre] > plus[now]:
+                plus[pre], plus[now] = plus[now], pre[now]
+                now = pre
+                pre = now - 1
+    K = 0
+    while K < k:
+        if not plus or plus[0] > minus[0]:
+            answer = ID.pop(0)
+            minus.pop(0)
+            K += 1
+        elif not minus or plus[0] < minus[0]:
+            answer = ID.pop(-1)
+            plus.pop(0)
+            K += 1
+        else:
+            if abs(ID[0]) < abs(ID[-1]):
+                answer = ID.pop(0)
+                minus.pop(0)
+            else:
+                answer = ID.pop(-1)
+                plus.pop(0)
+            K += 1
 
-def dfs(y, x, color):
-    distance = 0
-    for i in range(4):
-        while 0 <= y+dy[i] < 19 and 0 <= x+dx[i] < 19 and Data[y+dy[i]][x+dx[i]] == color:
-            distance += 1
-
-        while 0 <= y+dy[i+4] < 19 and 0 <= x+dx[i+4] < 19 and Data[y+dy[i+4]][x+dx[i+4]] == color:
-            distance += 1
-# def right():
-#     for y in range(19):
-#         count = 0
-#         state = 0
-#         for x in range(19):
-#             if Data[y][x] != 0:
-#                 if state != Data[y][x]:
-#                     if count == 5:
-#                         return state, y+1, x - 4
-#                     state = Data[y][x]
-#                     count = 1
-#                 else:
-#                     count += 1
-#             else:
-#                 if count == 5:
-#                     return state, y+1, x - 4
-#                 else:
-#                     count = 0
-#                     state = 0
-#         else:
-#             if count == 5:
-#                 return state, y + 1, x - 4
-#
-# def down():
-#     for x in range(19):
-#         count = 0
-#         state = 0
-#         for y in range(19):
-#             if Data[y][x] != 0:
-#                 if state != Data[y][x]:
-#                     if count == 5:
-#                         return state, y - 4, x + 1
-#                     state = Data[y][x]
-#                     count = 1
-#                 else:
-#                     count += 1
-#             else:
-#                 if count == 5:
-#                     return state, y - 4, x + 1
-#                 else:
-#                     count = 0
-#                     state = 0
-#         else:
-#             if count == 5:
-#                 return state, y - 4, x + 1
-#
-#
-# def rightdown():
-#     for y in range(19-4):
-#         x = 0
-#         count = 0
-#         state = 0
-#         while y < 19:
-#             if Data[y][x] != 0:
-#                 if state != Data[y][x]:
-#                     if count == 5:
-#                         return state, y - 4, x - 4
-#                     state = Data[y][x]
-#                     count = 1
-#                 else:
-#                     count += 1
-#             else:
-#                 if count == 5:
-#                     return state, y - 4, x - 4
-#                 else:
-#                     count = 0
-#                     state = 0
-#             y += dy[3]
-#             x += dx[3]
-#         else:
-#             if count == 5:
-#                 return state, y - 4, x - 4
-#
-#     for x in range(1, 19-4):
-#         y = 0
-#         count = 0
-#         state = 0
-#         while x < 19:
-#             if Data[y][x] != 0:
-#                 if state != Data[y][x]:
-#                     if count == 5:
-#                         return state, y - 4, x - 4
-#                     state = Data[y][x]
-#                     count = 1
-#                 else:
-#                     count += 1
-#             else:
-#                 if count == 5:
-#                     return state, y - 4, x - 4
-#                 else:
-#                     count = 0
-#                     state = 0
-#             y += dy[3]
-#             x += dx[3]
-#         else:
-#             if count == 5:
-#                 return state, y - 4, x - 4
-#
-#
-# def rightup():
-#     for y in range(5, 19):
-#         x = 0
-#         count = 0
-#         state = 0
-#         while y < 0:
-#             if Data[y][x] != 0:
-#                 if state != Data[y][x]:
-#                     if count == 5:
-#                         return state, y + 4, x - 4
-#                     state = Data[y][x]
-#                     count = 1
-#                 else:
-#                     count += 1
-#             else:
-#                 if count == 5:
-#                     return state, y + 4, x - 4
-#                 else:
-#                     count = 0
-#                     state = 0
-#             y += dy[1]
-#             x += dx[1]
-#         else:
-#             if count == 5:
-#                 return state, y + 4, x - 4
-#
-#     for x in range(1, 19 - 4):
-#         y = 18
-#         count = 0
-#         state = 0
-#         while x < 19:
-#             if Data[y][x] != 0:
-#                 if state != Data[y][x]:
-#                     if count == 5:
-#                         return state, y + 4, x - 4
-#                     state = Data[y][x]
-#                     count = 1
-#                 else:
-#                     count += 1
-#             else:
-#                 if count == 5:
-#                     return state, y + 4, x - 4
-#                 else:
-#                     count = 0
-#                     state = 0
-#             y += dy[1]
-#             x += dx[1]
-#         else:
-#             if count == 5:
-#                 return state, y + 4, x - 4
-
-
-Data = []
-for _ in range(19):
-    data = list(map(int, input().split()))
-    Data.append(data)
-
-answer = []
-for i in [right(), down(), rightdown(), rightup()]:
-    if i:
-        print(f'{i[0]}\n{i[1]} {i[2]}')
+    print(answer)

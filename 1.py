@@ -1,38 +1,31 @@
 import sys
 sys.stdin = open('input.txt')
 
-
-def sudoku():
-    for i in range(9):
-        Data[i] = list(map(int, input().split()))
-        if len(set(Data[i])) != 9:
-            for p in range(i+1, 9):
-                Data[i] = input()
-            return 0
-
-    for m in range(1, 9, 3):
-        for n in range(1, 9, 3):
-            sum9 = Data[m][n]
-            for o in range(8):
-                sum9 += Data[m+dy[o]][n+dx[o]]
-            if sum9 != 45:
-                return 0
-
-    for j in range(9):
-        for k in range(j+1, 9):
-            if k > j:
-                Data[j][k], Data[k][j] = Data[k][j], Data[j][k]
-
-    for l in range(9):
-        if len(set(Data[l])) != 9:
-            return 0
-
-    return 1
-
-
-dy = [-1, -1, 0, 1, 1, 1, 0, -1]
-dx = [0, 1, 1, 1, 0, -1, -1, -1]
 T = int(input())
-Data = [[] for _ in range(9)]
-for t in range(T):
-    print('#{} {}'.format(t+1, sudoku()))
+for t in range(1):
+    N, M = map(int, input().split())
+    cand = set()
+    for _ in range(N):
+        data = input()
+        if int(data, 16):
+            Data = [0 for _ in range(M*4)]
+            for d in range(len(data)):
+                for k in range(4):
+                    if int(data[d], 16) & (1<<4-k):
+                        Data[d*4+k] = 1
+
+            i = len(Data)-1
+            while i > 0:
+                if Data[i] == 1:
+                    j = i
+                    while Data[j] == 1:
+                        j -= 28
+                        if j < 0:
+                            break
+                    else:
+                        cand.update(Data[j:i+1])
+                        print(cand)
+                        i = j
+                else:
+                    i -= 1
+

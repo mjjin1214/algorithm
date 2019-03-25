@@ -2,43 +2,20 @@ import sys
 sys.stdin = open('input1.txt')
 
 
-def dfs(y, x, su):
-    global N, min_sum
-    if min_sum <= su:
+def pre(i, p):
+    if p[1]-p[0] < 0:
         return
-    if y == N-1 and x == N-1:
-        if min_sum > su:
-            min_sum = su
+    print(postorder[p[1]], end=' ')
+    if i[1] == i[0] or p[1] == p[0]:
         return
-    for i in range(4):
-        if 0 <= y + dy[i] < N and 0 <= x + dx[i] < N:
-            if visit[y+dy[i]][x+dx[i]] < 0 or visit[y+dy[i]][x+dx[i]] > su:
-                visit[y + dy[i]][x + dx[i]] = su
-                dfs(y+dy[i], x+dx[i], su+data[y+dy[i]][x+dx[i]])
+    for j in range(len(inorder)):
+        if inorder[j] == postorder[p[1]]:
+            pre((i[0], j-1), (p[0], j-1))
+            pre((j+1, i[1]), (j, p[1]-1))
+            break
 
-
-dy = [0, 1, 0, -1]
-dx = [1, 0, -1, 0]
-T = int(input())
-for t in range(T):
-    N = int(input())
-    data = [[] for _ in range(N)]
-    for n in range(N):
-        data[n] = list(map(int, list(input())))
-
-    visit = [[-1 for _ in range(N)] for _ in range(N)]
-    visit[0][0] = 0
-    min_sum = 999999999
-    dfs(0, 0, 0)
-
-    print('#{} {}'.format(t + 1, min_sum))
-    # 1 2
-    # 2 2
-    # 3 8
-    # 4 57
-    # 5 151
-    # 6 257
-    # 7 18
-    # 8 160
-    # 9 414
-    # 10 395
+n = int(input())
+inorder = input().split()
+postorder = input().split()
+visit = 0
+pre((0, len(inorder)-1), (0, len(postorder)-1))

@@ -2,39 +2,31 @@ import sys
 sys.stdin = open('input2.txt')
 
 
-def subset(visit, k, n):
-    global N, min_sum
-    if n == N//2:
-        x = y = 0
-        for i in range(N):
-            if visit & (1<<i):
-                x += data[i][0]
-                y += data[i][1]
-            else:
-                x -= data[i][0]
-                y -= data[i][1]
-
-        if min_sum > x**2+y**2:
-            min_sum = x**2+y**2
+def subset(n, su):
+    global visit, count
+    if n == len(score):
+        if not visit & (1<<su):
+            visit ^= (1<<su)
+            count += 1
         return
-    elif m==N//2:
-
-    if k >= N:
-        return
-    if N-k+n < N//2:
-        return
-    subset(visit ^ (1<<k), k+1, n+1,m)
-    subset(visit, k+1, n,m+1)
+    subset(n+1, su+score[n])
+    subset(n+1, su)
 
 
 T = int(input())
 for t in range(T):
     N = int(input())
-    data = [() for _ in range(N)]
-    for n in range(N):
-        data[n] = tuple(map(int, input().split()))
+    score = list(map(int, input().split()))
+    vector = [0]*(sum(score)+1)
+    score = list(set(score))
+    for s in score:
+        vector[s] = 1
 
-    visit = 0
-    min_sum = 9999999999999
-    subset(0, 0, 0)
-    print('#{} {}'.format(t+1, min_sum))
+    for i in range(len(vector)):
+        if vector[i]:
+            for j in range(len(vector)):
+                vector[i+j] = 1
+
+    # visit = count = 0
+    # subset(1, score[0])
+    print('#{} {}'.format(t+1, sum(vector)))

@@ -2,31 +2,39 @@ import sys
 sys.stdin = open('input2.txt')
 
 
-def subset(n, su):
-    global visit, count
-    if n == len(score):
-        if not visit & (1<<su):
-            visit ^= (1<<su)
-            count += 1
-        return
-    subset(n+1, su+score[n])
-    subset(n+1, su)
+def GCD(a, b):
+    if abs(a) < abs(b):
+        return GCD(b, a)
+    elif b == 0:
+        return a
+    else:
+        return GCD(b, a%b)
 
 
 T = int(input())
 for t in range(T):
-    N = int(input())
-    score = list(map(int, input().split()))
-    vector = [0]*(sum(score)+1)
-    score = list(set(score))
-    for s in score:
-        vector[s] = 1
+    R, N, K = map(int, input().split())
+    data = [() for _ in range(N)]
+    for n in range(N):
+        data[n] = tuple(map(int, input().split()))
 
-    for i in range(len(vector)):
-        if vector[i]:
-            for j in range(len(vector)):
-                vector[i+j] = 1
-
-    # visit = count = 0
-    # subset(1, score[0])
-    print('#{} {}'.format(t+1, sum(vector)))
+    answer = 0
+    for i in range(len(data)):
+        temp_set = set()
+        for j in range(len(data)):
+            if i == j:
+                continue
+            a = data[j][0]-data[i][0]
+            b = data[j][1]-data[i][1]
+            if a == 0:
+                b //= abs(b)
+            elif b == 0:
+                a //= abs(a)
+            else:
+                c = GCD(a, b)
+                a //= c
+                b //= c
+            temp_set.add((a, b))
+        print(temp_set)
+        answer += len(temp_set)
+    print('#{} {}'.format(t+1, answer))
